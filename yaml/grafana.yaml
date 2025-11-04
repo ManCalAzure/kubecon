@@ -26,6 +26,6 @@ spec:
           volumeMounts:
             - name: grafana-storage
               mountPath: /var/lib/grafana
-      volumes:
+      volumes: 
         - name: grafana-storage
-          emptyDir: {}apiVersion: apps/v1
+          emptyDir: {}
