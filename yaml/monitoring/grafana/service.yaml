@@ -1,17 +1,17 @@
-# monitoring/grafana/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: grafana
-  namespace: grafana
-  labels: { app: grafana }
-  annotations:
-    # Ask Cilium LB-IPAM for a specific VIP on eth1’s /24
-    lbipam.cilium.io/ips: "10.200.0.241"   # pick one inside 10.200.0.240/28
-spec:
-  type: LoadBalancer
-  selector: { app: grafana }
-  ports:
-    - name: http
-      port: 80
-      targetPort: 3000
+# # monitoring/grafana/service.yaml
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: grafana
+#   namespace: grafana
+#   labels: { app: grafana }
+#   annotations:
+#     # Ask Cilium LB-IPAM for a specific VIP on eth1’s /24
+#     lbipam.cilium.io/ips: "10.200.0.241"   # pick one inside 10.200.0.240/28
+# spec:
+#   type: LoadBalancer
+#   selector: { app: grafana }
+#   ports:
+#     - name: http
+#       port: 80
+#       targetPort: 3000
