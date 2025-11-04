@@ -1,0 +1,8 @@
+# networking/cilium/pools/grafana-pool.yaml
+apiVersion: cilium.io/v2
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: grafana-pool
+spec:
+  blocks:
+    - cidr: 10.200.0.240/28   # <-- EDIT: unused L2/LAN range reserved for VIPs

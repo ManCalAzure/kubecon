@@ -1,0 +1,14 @@
+# networking/cilium/l2/grafana-l2.yaml
+apiVersion: cilium.io/v2alpha1
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: grafana-l2
+spec:
+  serviceSelector:
+    matchLabels:
+      app: grafana                 # Matches the Service below
+  loadBalancerIPs: true
+  # Optionally constrain which NICs to announce on (regex):
+   interfaces:
+     - "^eth1$"
+
