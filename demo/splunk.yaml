@@ -1,37 +1,9 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: splunk
-
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: splunk-admin
-  namespace: splunk
-type: Opaque
-stringData:
-  SPLUNK_PASSWORD: "ChangeMe!123"   # ← set your own strong password
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: splunk-data
-  namespace: splunk
-spec:
-  accessModes: ["ReadWriteOnce"]
-  resources:
-    requests:
-      storage: 20Gi
-  storageClassName: ""              # ← set to your cluster's StorageClass or remove to use default
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: splunk
-  namespace: splunk
+  labels:
+    app: splunk
 spec:
   replicas: 1
   selector:
@@ -43,63 +15,25 @@ spec:
         app: splunk
     spec:
       containers:
-        - name: splunk
-          image: splunk/splunk:latest
-          ports:
-            - containerPort: 8000   # Web UI
-            - containerPort: 8089   # Mgmt API
-            - containerPort: 9997   # Indexer receiving
-          env:
-            - name: SPLUNK_START_ARGS
-              value: "--accept-license"
-            - name: SPLUNK_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: splunk-admin
-                  key: SPLUNK_PASSWORD
-          volumeMounts:
-            - name: splunk-storage
-              mountPath: /opt/splunk/var
-              subPath: var
-            - name: splunk-storage
-              mountPath: /opt/splunk/etc
-              subPath: etc
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 8000
-            initialDelaySeconds: 60
-            periodSeconds: 15
-            timeoutSeconds: 5
-          resources:
-            requests:
-              cpu: "500m"
-              memory: "2Gi"
-            limits:
-              cpu: "2"
-              memory: "6Gi"
-      volumes:
-        - name: splunk-storage
-          persistentVolumeClaim:
-            claimName: splunk-data
-
+      - name: splunk
+        image: splunk/splunk:latest
+        ports:
+          - containerPort: 8000   # Web UI
+        env:
+          - name: SPLUNK_START_ARGS
+            value: "--accept-license"
+          - name: SPLUNK_PASSWORD
+            value: "ChangeMe!123"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: splunk
-  namespace: splunk
 spec:
-  type: ClusterIP          # change to NodePort/LoadBalancer if you prefer
   selector:
     app: splunk
   ports:
     - name: web
       port: 8000
       targetPort: 8000
-    - name: mgmt
-      port: 8089
-      targetPort: 8089
-    - name: idx-recv
-      port: 9997
-      targetPort: 9997
+  type: NodePort
