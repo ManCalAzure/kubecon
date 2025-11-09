@@ -10,7 +10,7 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-    - 192.168.2.200-192.168.2.210   # change to free IPs on your LAN
+    - 192.168.0.200-192.168.0.210   # change to free IPs on your LAN
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
