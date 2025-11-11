@@ -1,25 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cashier-counter
+  name: cashier-counter-llm2
   labels:
-    app: cashier-counter
+    app: cashier-counter-llm2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cashier-counter
+      app: cashier-counter-llm2
   template:
     metadata:
       labels:
-        app: cashier-counter
+        app: cashier-counter-llm2
     spec:
       containers:
-        - name: cashier-counter
+        - name: cashier-counter-llm2
           image: zedmanny/cashier-counter:llm-2
           ports:
             - containerPort: 8080
-          # Optional probes (safe defaults)
           readinessProbe:
             httpGet:
               path: /
@@ -36,16 +35,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cashier-counter-service
+  name: cashier-counter-llm2-service
   labels:
-    app: cashier-counter
+    app: cashier-counter-llm2
 spec:
   type: NodePort
   selector:
-    app: cashier-counter
+    app: cashier-counter-llm2
   ports:
     - name: http
       protocol: TCP
-      port: 8080         # Cluster service port
-      targetPort: 8080   # Container port
-      nodePort: 8080     # Host port on each node
+      port: 8080          # cluster service port
+      targetPort: 8080    # container port
+      nodePort: 8081      # host port
